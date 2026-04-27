@@ -100,6 +100,31 @@ with st.form ("Nuevos ingresos para NETFLIX: "):
         df_netflix = pd.concat([df_netflix, fila_nueva_n], ignore_index=True)
         st.success("¡Proyecto añadido con éxito!")
 
+#PARTE 3, 24 pts, FILTROS
+
+#CSV 1, VEHÍCULOS
+st.header("Busqueda de vehículos según los filtros que quiera: ")
+año = st.sidebar.number_input("Vehículo del año que desea: ", 2000, 2025, 2000)
+precio = st.sidebar.number_input("Ingrese su precio máximo: ",0.00, 845,000.00, 0.00)
+df_vehiculos_f = df_vehiculos[(df_vehiculos['Model_Year'] < año) & (df_vehiculos['Base_MSRP'] < precio)]
+
+#CSV 2, GIMNASIO:
+st.header ("Busqueda de datos según filtros: ")
+calorias =st.sidebar.number_input("Calorías quemadas: ",0.00)
+grasa = st.siderbar.slider ("Porcentaje de grasa máxima: ", 0.00, 100.00, 50)
+df_gimnasio_f = df_gimnasio[(df_gimnasio['Calories_Burned'] >= calorias) & (df_gimnasio['Fat_Percentage'] <= grasa)]
+
+#CSV 3, VIDEOJUEGOS:
+st.header("Busqueda de videojuego según flitros: ")
+precio_vj = st.siderbar.number_input("Ingrese precio minimo: ", 0.00)
+descuento = st.siderbar.slider("Videojuegos con descuento menor al: ", 0, 100, 55)
+df_videojuegos_f = df_videojuegos[(df_videojuegos['Price'] > precio_vj) & (df_videojuegos['salePercent_num'] < descuento)]
+
+#CSV 4, NETFLIX:
+st.header("Busqueda de proyectos según flitros: ")
+duracion = st.sidebar.number_input("Películas más largas de:",0)
+año_adicion = st.sidebar.number_input("Contenido añadido antes del año:", 2007, 2025, 2020)
+df_netflix_f = df_netflix[(df_netflix['duration_min'] > duracion) & (df_netflix['year_added'] < año_adicion)]
 
 
 
