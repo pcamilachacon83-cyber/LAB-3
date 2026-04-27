@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st 
 
 #PARTE 1, 20PTS LECTURA Y EXPLORACIÓN INICIAL:
+
 #CVS 1, VEHICULOS ELECTRICOS:
 df_vehiculos = pd.read_csv("Electric_Vehicle_Population-2.csv")
 st.title("Análisis de los Vehiculos Electricos")
@@ -33,4 +34,74 @@ st.write(f"Filas: {df_netflix.shape[0]}, Columnas: {df_netflix.shape [1]}")
 st.write("COLUMNAS: ", list(df_netflix.columns))
 st.dataframe(df_netflix.head(6))
 st.write("Estadísticas generales: ", df_netflix.describe())
+
+
+#PARTE 2, 8PTS, INGRESO DE NUEVOS DATOS:
+
+#INGRESO DE NUEVOS DATOS PARA CSV 3, VIDEOJUEGOS:
+st.header("Ingreso de datos para videojuegos: ")
+with st.form ("Nuevos videojuegos"):
+    st.write ("Registra un nuevo videojuego: ")
+    title_vj = st.text_input("Nombre del Juego: ")
+    description_vj = st.text_input("Descripción del juego: ")
+    price = st.number_input("Precio del juego: ")
+    salepercent = st.slider(",Seleccione el descuento del juego: ", 0,100,0)
+    recentReviews = st.text_input("Reseñas recientes del juego: ")
+    allReviews = st.text_input ("Reseñas del videojuego: ")
+    boton_vj = st.form_submit_button("Añadir Videojuego")
+    if boton_vj:
+        nueva_fila_vj = {
+            "title" : title_vj, 
+            "description" : description_vj,
+            "rrice" : price,
+            "salePercent" : f"-{salepercent}%",
+            "recentReviews" : recentReviews,
+            "allReviews" : allReviews,
+        }
+        fila_nueva = pd.DataFrame([nueva_fila_vj])
+        df_videojuegos = pd.concat([df_videojuegos, fila_nueva], ignore_index=True)
+        st.success("¡Videojuego añadido con éxito!")
+     
+
+
+#INGRESO DE NUEVOS DATOS PARA CSV 4, NETFLIX:
+st.header("Ingreso de datos para netflix: ")
+with st.form ("Nuevos ingresos para NETFLIX: "):
+    st.write ("Registre un nuevo proyecto: ")
+    show_id = st.text_input("Id del show: ")
+    tipo = st.text_input("Ingrese el tipo del proyecto: ")
+    title = st.text_input("Ingrese el título: ")
+    director = st.text_input("Ingrese el nombre del director: ")
+    cast = st.text_input("Ingrese el nombre de los actores: ")
+    country = st.text_input("Ingrese el país de grabación: ")
+    date_added = st.text_input("Ingrese la fecha en la que se añadio: ")
+    release_year = st.number_input("Ingrese el año en que se estreno: ")
+    rating = st.text_input("Ingrese el rango: ")
+    duration = st.text_input("Ingrese cuanto dura (minutos/temporadas): ")
+    listed_in = st.text_input("Ingrese en que está listado (drama, comedia, romance, etc): ")
+    description = st.text_input("Ingrese una la sinopsis: ")
+    boton_n = st.form_submit_button("Añadir proyeto")
+    if boton_n:
+        nueva_fila_n = {
+            "show_id": show_id,
+            "type": tipo,
+            "title": title,
+            "director": director,
+            "cast": cast,
+            "country": country,
+            "date_added": date_added,
+            "release_year": release_year,
+            "rating":  rating,
+            "duration": duration,
+            "listed_in": listed_in,
+            "description": description,
+        }
+        fila_nueva_n = pd.DataFrame([nueva_fila_n])
+        df_netflix = pd.concat([df_netflix, fila_nueva_n], ignore_index=True)
+        st.success("¡Proyecto añadido con éxito!")
+
+
+
+
+
 
