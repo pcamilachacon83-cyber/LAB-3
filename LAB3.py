@@ -143,5 +143,87 @@ df_netflix_f = df_netflix[
 ]
 st.dataframe(df_netflix_f)
 
+#Parte 4
+
+#CSV 1, VEHICULOS:
+st.header ("Nueva categoria de vehículos: ")
+def categorizar_rango(r):
+    if r < 100:
+        return "Bajo"
+    elif 100 <= r <= 250:
+        return "Medio"
+    else:
+        return "Alto"
+df_vehiculos['RangoCategoria'] = df_vehiculos['Electric_Range'].apply(categorizar_rango)
+st.subheader("Conteo por Categoría de Rango")
+conteo_v = df_vehiculos['RangoCategoria'].value_counts()
+st.bar_chart(conteo_v)
+analisis_v = df_vehiculos.groupby('RangoCategoria').agg({
+    'Base_MSRP': 'mean',
+    'Model Year': 'mean',
+    'Electric_Range': 'std'
+})
+st.table(analisis_v)
+
+#CSV 2, GIMNASIO:
+st.header("Nueva categoria de GYM: ")
+def categorizar_frecuencia(f):
+    if f < 3: 
+        return "Baja"
+    elif 3 <= f <= 5:
+        return "Moderada"
+    else:
+        return "Alta"
+df_gimnasio['NivelFrecuencia'] = df_gimnasio['Workout_Frequency (days/week)'].apply(categorizar_frecuencia)
+st.subheader("Registros por Nivel de Frecuencia")
+st.bar_chart(df_gimnasio['NivelFrecuencia'].value_counts())
+st.write("Métricas por Frecuencia:")
+analisis_g = df_gimnasio.groupby('NivelFrecuencia').agg({
+    'Session_Duration (hours)': 'mean',
+   'Experience_Level': 'mean',
+    'BMI': 'std'
+})
+st.table(analisis_g)
+
+#CSV 3, VIDEOJUEGOS:
+st.header ("Nueva categoria para videojuegos: ")
+def categorizar_gama(p):
+    if p < 10:
+        return "Baja"
+    elif 10 <= p <= 24:
+        return "Media"
+    else: 
+        return "Alta"
+df_videojuegos['GamaJuego'] = df_videojuegos['price_num'].apply(categorizar_gama)
+st.subheader("Cantidad de Juegos por Gama")
+st.bar_chart(df_videojuegos['GamaJuego'].value_counts())
+st.write("Métricas por Gama de Precio:")
+analisis_vj = df_videojuegos.groupby('GamaJuego').agg({
+    'price_num': ['mean', 'std'],
+    'salePercent_num': 'mean'
+})
+st.table(analisis_vj)
+
+#CSV 4, NETFLIX:
+st.header("Nueva categoria para netflix: ")
+audiencias = {
+    'Niños': ['G', 'TV-Y', 'TV-G', 'TV-Y7', 'TV-Y7-FV'],
+    'Adolescentes': ['PG', 'TV-PG'],
+    'Adultos Jóvenes': ['PG-13', 'TV-14'],
+    'Adultos': ['R', 'TV-MA', 'NC-17']
+}
+def categorizar_audiencia(a):
+    for c, ratings in audiencias.items():
+        if a in ratings: return c
+    return "Otro"
+df_netflix['TipoAudiencia'] = df_netflix['rating'].apply(categorizar_audiencia)
+st.subheader("Contenido por Tipo de Audiencia")
+st.bar_chart(df_netflix['TipoAudiencia'].value_counts())
+st.write("Análisis por Audiencia:")
+analisis_n = df_netflix.groupby('TipoAudiencia').agg({
+    'type': lambda x: x.mode()[0] if not x.mode().empty else "N/A",
+    'duration_num': 'mean'
+})
+st.table(analisis_n)
 
 
