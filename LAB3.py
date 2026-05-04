@@ -1,3 +1,10 @@
+#Universidad del Valle de Guatemala
+#Facultad de Ingeniería
+#Algoritmos y Programación Básica
+#Paula Camila Chacón Mérida - 26860 y Luis Esteban Ciurla Rivas - 26403
+#Laboratorio 3
+#03/05/2026
+
 import pandas as pd
 import streamlit as st 
 
@@ -226,4 +233,61 @@ analisis_n = df_netflix.groupby('TipoAudiencia').agg({
 })
 st.table(analisis_n)
 
+#PARTE 5, PREGUNTAS, 12 PTS
+st.divider()
+st.title("5. Análisis de Preguntas Clave")
 
+#CSV 1, VEHICULOS:
+st.header("Vehículos Eléctricos")
+resumen_rango_año = df_vehiculos.groupby("Model Year")['Electric_Range'].mean()
+st.subheader("¿El rango aumenta con los años?")
+st.line_chart(resumen_rango_año)
+st.write("Promedio de rango en los últimos 5 años:", resumen_rango_año.tail())
+corr_v = df_vehiculos['Base_MSRP'].corr(df_vehiculos['Electric_Range'])
+st.subheader("¿A mayor precio, mayor rango?")
+st.write(f"Coeficiente de correlación de Pearson: {corr_v:.2f}")
+
+#CSV 2, GIMNASIO
+st.header("Gimnasio")
+corr_g = df_gimnasio['Calories_Burned'].corr(df_gimnasio["Session_Duration (hours)"])
+st.subheader("¿Más tiempo equivale a más calorías?")
+st.write(f"Correlación entre duración y calorías: {corr_g:.2f}")
+resumen_grasa = df_gimnasio.groupby('Experience_Level')['Fat_Percentage'].mean()
+st.subheader("Grasa corporal promedio por Nivel de Experiencia")
+st.bar_chart(resumen_grasa)
+
+#CSV 3, VIDEOJUEGOS:
+st.header("Videojuegos")
+calificacion_gama = df_videojuegos.groupby('GamaJuego')['allReviews'].value_counts().unstack().fillna(0)
+st.subheader("Distribución de reseñas por Gama de Juego")
+st.dataframe(calificacion_gama)
+mejores_calificados = df_videojuegos[df_videojuegos['allReviews'].str.contains('Positive', na=False)]
+min_p = mejores_calificados['price_num'].min()
+max_p = mejores_calificados['price_num'].max()
+st.subheader("Rango de precios de juegos con mejores reseñas")
+st.info(f"El rango de precios para juegos 'Positive' va desde ${min_p} hasta ${max_p}")
+
+#CSV 4, NETFLIX:
+st.header("Netflix")
+Top_10_recientes = df_netflix.sort_values(by='year_added_clean', ascending=False).head(10)
+st.subheader("10 títulos más recientes añadidos al catálogo")
+st.table(Top_10_recientes[['title', 'date_added']])
+paises_top = df_netflix['country'].value_counts().head(10)
+st.subheader("Top países con más producciones")
+st.bar_chart(paises_top)
+
+#PARTE 6, 4 PTS:
+import os
+st.divider()
+st.subheader("Auditoría de Archivos")
+archivos_esperados = [
+    "Electric_Vehicle_Population_Actualizado.csv",
+    "GymExerciseTracking_Actualizado.csv",
+    "steam_store_data_2024_Actualizado.csv",
+    "netflix_titles_Actualizado.csv"
+]
+for archivo in archivos_esperados:
+    if os.path.exists(archivo):
+        st.write(f"Archivo encontrado en carpeta: `{archivo}`")
+    else:
+        st.error(f"No se encontró el archivo: {archivo}")
